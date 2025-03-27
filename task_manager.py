@@ -105,5 +105,8 @@ def handle_task_management(year, month, day):
                         if 0 <= task_index < len(tasks):
                             if mode == "delete":
                                 delete_task(year, month, day, task_index)
+                                tasks = get_tasks_for_day(year, month, day)
+                                if not tasks:
+                                    break
                             else:
                                 toggle_status(year, month, day, task_index)
