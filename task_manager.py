@@ -56,7 +56,6 @@ def delete_task(year, month, day, task_index):
 
 def display_task_for_day(year, month, day, mode="main"):
     tasks = get_tasks_for_day(year, month, day)
-
     print(f"\n \033[4m{year}-{month:02d}-{day:02d}\033[0m:\n")
 
     if tasks:
@@ -70,7 +69,8 @@ def display_task_for_day(year, month, day, mode="main"):
                   "[\033[1;97mT\033[0m] Toggle Status [\033[1;97mB\033[0m] Go Back\n")
         else:
             action_text = "Delete Task" if mode == "delete" else "Toggle Status"
-            print(f"\n\n [1-{len(tasks) if len(tasks) > 1 else 1}] {action_text}  [\033[1;97mB\033[0m] Go Back\n")
+            print(f"\n\n [{len(tasks) if len(tasks) == 1 else '1-' + str(len(tasks))}] "
+                  f"{action_text}  [\033[1;97mB\033[0m] Go Back\n")
     else:
         print(" No tasks for this day.")
         print("\n\n [\033[1;97mC\033[0m] Create Task  [\033[1;97mB\033[0m] Go Back\n")
