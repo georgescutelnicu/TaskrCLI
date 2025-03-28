@@ -16,6 +16,7 @@ def display_calendar(year, month):
             if day == 0:
                 line += "   "
             elif day == today.day and month == today.month and year == today.year:
+                todays_tasks = [task for task in tasks]
                 line += f" \033[1;1;34m{day:2d}\033[0m"
             elif tasks:
                 pending_tasks = sum(1 for task in tasks if task["status"] == "pending")
@@ -41,6 +42,12 @@ def display_calendar(year, month):
     for i in range(len(calendar_lines)):
         legend_line = legend_lines[i] if i < len(legend_lines) else ""
         print(f"{calendar_lines[i]}      {legend_line}")
+
+    if todays_tasks:
+        print("\n\n \033[4mToday's Mission:\033[0m\n")
+        for task in todays_tasks:
+            status_color = "\033[1;32m" if task['status'] == 'completed' else "\033[1;31m"
+            print(f" {status_color}{task['task']}\033[0m")
 
     print(f"\n\n [\033[1;97m1-{calendar.monthrange(year, month)[1]}\033[0m] Check Day  "
           f"[\033[1;97mN\033[0m] Next Month [\033[1;97mP\033[0m] Previous Month  [\033[1;97mQ\033[0m] Quit\n")
