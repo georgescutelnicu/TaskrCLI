@@ -81,7 +81,6 @@ def handle_task_management(year, month, day):
         clear_screen()
         display_task_for_day(year, month, day)
         action = input(" ").strip().lower()
-
         if action == 'b':
             break
         elif action == 'c':
@@ -97,7 +96,6 @@ def handle_task_management(year, month, day):
                     clear_screen()
                     display_task_for_day(year, month, day, mode=mode)
                     task_index = input(" ").strip().lower()
-
                     if task_index == 'b':
                         break
                     elif task_index.isdigit():

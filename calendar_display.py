@@ -8,6 +8,7 @@ def display_calendar(year, month):
     today = datetime.date.today()
 
     calendar_lines = [f"    {calendar.month_name[month]} {year}", " Mo Tu We Th Fr Sa Su"]
+    todays_tasks = []
 
     for week in cal:
         line = ""
@@ -44,13 +45,13 @@ def display_calendar(year, month):
         print(f"{calendar_lines[i]}      {legend_line}")
 
     if todays_tasks:
-        print("\n\n \033[4mToday's Mission:\033[0m\n")
+        print("\n\n \033[4mToday's Checklist:\033[0m\n")
         for task in todays_tasks:
             status_color = "\033[1;32m" if task['status'] == 'completed' else "\033[1;31m"
             print(f" {status_color}{task['task']}\033[0m")
 
     print(f"\n\n [\033[1;97m1-{calendar.monthrange(year, month)[1]}\033[0m] Check Day  "
-          f"[\033[1;97mN\033[0m] Next Month [\033[1;97mP\033[0m] Previous Month  [\033[1;97mQ\033[0m] Quit\n")
+          f"[\033[1;97mN\033[0m] Next Month [\033[1;97mP\033[0m] Previous Month [\033[1;97mQ\033[0m] Quit\n")
 
 
 def go_to_next_month(current_date):
