@@ -1,6 +1,7 @@
 import calendar
 import datetime
 from task_manager import get_tasks_for_day, handle_task_management
+from utils import color_text, BLUE, GREEN, RED, WHITE
 
 
 def display_calendar(year, month):
@@ -18,13 +19,11 @@ def display_calendar(year, month):
                 line += "   "
             elif day == today.day and month == today.month and year == today.year:
                 todays_tasks = [task for task in tasks]
-                line += f" \033[1;1;34m{day:2d}\033[0m"
+                line += f" {color_text(f'{day:2d}', BLUE)}"
             elif tasks:
                 pending_tasks = sum(1 for task in tasks if task["status"] == "pending")
-                if pending_tasks == 0:
-                    line += f" \033[1;32m{day:2d}\033[0m"
-                else:
-                    line += f" \033[1;31m{day:2d}\033[0m"
+                color = GREEN if pending_tasks == 0 else RED
+                line += f" {color_text(f'{day:2d}', color)}"
             else:
                 line += f" {day:2d}"
 
@@ -33,10 +32,10 @@ def display_calendar(year, month):
     legend_lines = [
         "",
         "",
-        "\033[1;34mBlue\033[0m - Current Day",
-        "\033[0mWhite - Free Day",
-        "\033[1;32mGreen\033[0m - Tasks Completed",
-        "\033[1;31mRed\033[0m - Tasks Pending"
+        f"{color_text('Blue', BLUE)} - Current Day",
+        f"{color_text('White', WHITE)} - Free Day",
+        f"{color_text('Green', GREEN)} - Tasks Completed",
+        f"{color_text('Red', RED)} - Tasks Pending"
     ]
 
     print()
@@ -45,13 +44,14 @@ def display_calendar(year, month):
         print(f"{calendar_lines[i]}      {legend_line}")
 
     if todays_tasks:
-        print("\n\n \033[4mToday's Checklist:\033[0m\n")
+        print("\n\n " + color_text("Today's Checklist:", '4') + "\n")
         for task in todays_tasks:
-            status_color = "\033[1;32m" if task['status'] == 'completed' else "\033[1;31m"
-            print(f" {status_color}{task['task']}\033[0m")
+            status_color = GREEN if task["status"] == "completed" else RED
+            print(f" {color_text(task['task'], status_color)}")
 
-    print(f"\n\n [\033[1;97m1-{calendar.monthrange(year, month)[1]}\033[0m] Check Day  "
-          f"[\033[1;97mN\033[0m] Next Month [\033[1;97mP\033[0m] Previous Month [\033[1;97mQ\033[0m] Quit\n")
+    print(f"\n\n [{color_text('1-' + str(calendar.monthrange(year, month)[1]), WHITE)}] Check Day  "
+          f"[{color_text('N', WHITE)}] Next Month [{color_text('P', WHITE)}] "
+          f"Previous Month [{color_text('Q', WHITE)}] Quit\n")
 
 
 def go_to_next_month(current_date):
@@ -66,11 +66,11 @@ def handle_calendar_navigation(current_date):
     display_calendar(current_date.year, current_date.month)
     action = input(" ").strip().lower()
 
-    if action == 'n':
+    if action == "n":
         return go_to_next_month(current_date)
-    elif action == 'p':
+    elif action == "p":
         return go_to_previous_month(current_date)
-    elif action == 'q':
+    elif action == "q":
         exit()
     elif action.isdigit():
         day = int(action)
