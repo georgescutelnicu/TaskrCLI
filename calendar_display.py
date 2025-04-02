@@ -5,6 +5,13 @@ from utils import color_text, BLUE, GREEN, RED, WHITE
 
 
 def display_calendar(year, month):
+    """
+    Displays a calendar for a given month and year, highlighting the current day and showing task statuses.
+
+    Args:
+        year (int): The year to display the calendar for.
+        month (int): The month to display the calendar for.
+    """
     cal = calendar.monthcalendar(year, month)
     today = datetime.date.today()
 
@@ -55,14 +62,41 @@ def display_calendar(year, month):
 
 
 def go_to_next_month(current_date):
+    """
+    Returns the first day of the next month based on the current date.
+
+    Args:
+        current_date (datetime.date): The current date.
+
+    Returns:
+        datetime.date: The first day of the next month.
+    """
     return (current_date.replace(day=28) + datetime.timedelta(days=4)).replace(day=1)
 
 
 def go_to_previous_month(current_date):
+    """
+    Returns the first day of the previous month based on the current date.
+
+    Args:
+        current_date (datetime.date): The current date.
+
+    Returns:
+        datetime.date: The first day of the previous month.
+    """
     return (current_date.replace(day=1) - datetime.timedelta(days=1)).replace(day=1)
 
 
 def handle_calendar_navigation(current_date):
+    """
+    Handles user navigation for the calendar: check day, go to next month, go to previous month, or quit.
+
+    Args:
+        current_date (datetime.date): The current date to display in the calendar.
+
+    Returns:
+        datetime.date: The updated date after navigation (next/previous month, or same day).
+    """
     display_calendar(current_date.year, current_date.month)
     action = input(" ").strip().lower()
 
