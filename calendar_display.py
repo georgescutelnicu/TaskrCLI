@@ -103,31 +103,31 @@ def go_to_current_month():
 
 def handle_calendar_navigation(current_date):
     """
-    Handles user navigation for the calendar: check day, go to next month, go to previous month, or quit.
+    Handles user navigation for the calendar: check day, go to next/previous/current month, or quit.
 
     Args:
         current_date (datetime.date): The current date to display in the calendar.
 
     Returns:
-        datetime.date: The updated date after navigation (next/previous month, or same day).
+        datetime.date: The updated date after navigation.
     """
     display_calendar(current_date.year, current_date.month)
     action = input(" ").strip().lower()
 
-    if action == "n":
-        return go_to_next_month(current_date)
-    elif action == "p":
-        return go_to_previous_month(current_date)
-    elif action == "c":
-        today = datetime.date.today()
-        if current_date.year != today.year or current_date.month != today.month:
-            return go_to_current_month()
-    elif action == "q":
-        exit()
-    elif action.isdigit():
-        day = int(action)
-        last_day_of_month = calendar.monthrange(current_date.year, current_date.month)[1]
-        if 1 <= day <= last_day_of_month:
-            handle_task_management(current_date.year, current_date.month, day)
+    actions = {
+        "n": lambda: go_to_next_month(current_date),
+        "p": lambda: go_to_previous_month(current_date),
+        "c": lambda: go_to_current_month()
+        if (current_date.year, current_date.month) != (datetime.date.today().year, datetime.date.today().month)
+        else current_date,
+        "q": exit
+    }
 
-    return current_date
+    if action.isdigit():
+        day = int(action)
+        last_day = calendar.monthrange(current_date.year, current_date.month)[1]
+        if 1 <= day <= last_day:
+            handle_task_management(current_date.year, current_date.month, day)
+        return current_date
+
+    return actions.get(action, lambda: current_date)()
