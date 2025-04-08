@@ -56,9 +56,15 @@ def display_calendar(year, month):
             status_color = GREEN if task["status"] == "completed" else RED
             print(f" {color_text(task['task'], status_color)}")
 
-    print(f"\n\n [{color_text('1-' + str(calendar.monthrange(year, month)[1]), WHITE)}] Check Day  "
-          f"[{color_text('N', WHITE)}] Next Month [{color_text('P', WHITE)}] "
-          f"Previous Month [{color_text('Q', WHITE)}] Quit\n")
+    nav_line = f"\n\n [{color_text('1-' + str(calendar.monthrange(year, month)[1]), WHITE)}] Check Day " \
+               f"[{color_text('N', WHITE)}] Next Month [{color_text('P', WHITE)}] Previous Month "
+
+    today = datetime.date.today()
+    if year != today.year or month != today.month:
+        nav_line += f"[{color_text('C', WHITE)}] Current Month "
+
+    nav_line += f"[{color_text('Q', WHITE)}] Quit\n"
+    print(nav_line)
 
 
 def go_to_next_month(current_date):
@@ -87,6 +93,14 @@ def go_to_previous_month(current_date):
     return (current_date.replace(day=1) - datetime.timedelta(days=1)).replace(day=1)
 
 
+def go_to_current_month():
+    """
+    Returns the first day of the current month.
+    """
+    today = datetime.date.today()
+    return today.replace(day=1)
+
+
 def handle_calendar_navigation(current_date):
     """
     Handles user navigation for the calendar: check day, go to next month, go to previous month, or quit.
@@ -104,6 +118,10 @@ def handle_calendar_navigation(current_date):
         return go_to_next_month(current_date)
     elif action == "p":
         return go_to_previous_month(current_date)
+    elif action == "c":
+        today = datetime.date.today()
+        if current_date.year != today.year or current_date.month != today.month:
+            return go_to_current_month()
     elif action == "q":
         exit()
     elif action.isdigit():
