@@ -127,13 +127,14 @@ def display_task_for_day(year, month, day, mode="main"):
             print(f" {index}. {status_text} {task['task']}")
 
         if mode == "main":
-            print("\n\n [C] Create Task  [D] Delete Task [T] Toggle Status [B] Go Back\n")
+            print("\n\n [C] Create Task  [D] Delete Task [T] Toggle Status [B] Go Back [Q] Quit\n")
         else:
             action_text = "Delete Task" if mode == "delete" else "Toggle Status"
-            print(f"\n\n [{len(tasks) if len(tasks) == 1 else '1-' + str(len(tasks))}] {action_text}  [B] Go Back\n")
+            print(f"\n\n [{len(tasks) if len(tasks) == 1 else '1-' + str(len(tasks))}] {action_text}  [B] Go Back"
+                  f"  [Q] Quit\n")
     else:
         print(" No tasks for this day.")
-        print("\n\n [C] Create Task  [B] Go Back\n")
+        print("\n\n [C] Create Task  [B] Go Back  [Q] Quit\n")
 
 
 def handle_task_management(year, month, day):
@@ -145,34 +146,46 @@ def handle_task_management(year, month, day):
         month (int): The month of the day.
         day (int): The day of the month.
     """
+    def create_task():
+        clear_screen()
+        task_name = input(" Enter task: ").strip()
+        if task_name:
+            add_task(year, month, day, task_name)
+
+    def modify_task(mode):
+        tasks = get_tasks_for_day(year, month, day)
+        if not tasks:
+            return
+        while True:
+            clear_screen()
+            display_task_for_day(year, month, day, mode=mode)
+            task_index = input(" ").strip().lower()
+            if task_index == "b":
+                break
+            elif task_index == "q":
+                exit()
+            elif task_index.isdigit():
+                idx = int(task_index) - 1
+                if 0 <= idx < len(tasks):
+                    if mode == "delete":
+                        delete_task(year, month, day, idx)
+                        tasks = get_tasks_for_day(year, month, day)
+                        if not tasks:
+                            break
+                    else:
+                        toggle_status(year, month, day, idx)
+
+    actions = {
+        "c": create_task,
+        "d": lambda: modify_task("delete"),
+        "t": lambda: modify_task("toggle"),
+        "q": exit,
+    }
+
     while True:
         clear_screen()
         display_task_for_day(year, month, day)
         action = input(" ").strip().lower()
         if action == "b":
             break
-        elif action == "c":
-            clear_screen()
-            task_name = input(" Enter task: ").strip()
-            if task_name:
-                add_task(year, month, day, task_name)
-        elif action in ["d", "t"]:
-            tasks = get_tasks_for_day(year, month, day)
-            if tasks:
-                mode = "delete" if action == "d" else "toggle"
-                while True:
-                    clear_screen()
-                    display_task_for_day(year, month, day, mode=mode)
-                    task_index = input(" ").strip().lower()
-                    if task_index == "b":
-                        break
-                    elif task_index.isdigit():
-                        task_index = int(task_index) - 1
-                        if 0 <= task_index < len(tasks):
-                            if mode == "delete":
-                                delete_task(year, month, day, task_index)
-                                tasks = get_tasks_for_day(year, month, day)
-                                if not tasks:
-                                    break
-                            else:
-                                toggle_status(year, month, day, task_index)
+        actions.get(action, lambda: None)()
