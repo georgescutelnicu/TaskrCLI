@@ -1,5 +1,5 @@
 import json
-from utils import clear_screen, color_text, GREEN, RED, UNDERLINE
+from utils import clear_screen, style_text, GREEN, RED, UNDERLINE
 
 
 def load_tasks():
@@ -118,12 +118,12 @@ def display_task_for_day(year, month, day, mode="main"):
         "delete" or "toggle" restricts to delete or toggle actions.
     """
     tasks = get_tasks_for_day(year, month, day)
-    print(f"\n {color_text(f'{year}-{month:02d}-{day:02d}', UNDERLINE)}:\n")
+    print(f"\n {style_text(f'{year}-{month:02d}-{day:02d}', UNDERLINE)}:\n")
 
     if tasks:
         for index, task in enumerate(tasks, start=1):
             status_color = GREEN if task["status"] == "completed" else RED
-            status_text = f"[{color_text(task['status'].capitalize(), status_color)}]".ljust(22)
+            status_text = f"[{style_text(task['status'].capitalize(), status_color)}]".ljust(22)
             print(f" {index}. {status_text} {task['task']}")
 
         if mode == "main":

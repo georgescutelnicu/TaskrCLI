@@ -1,11 +1,10 @@
 BLUE = "1;34"
 GREEN = "1;32"
 RED = "1;31"
-WHITE = "0"
 UNDERLINE = "4"
 
 
-def color_text(text, color_code):
+def style_text(text, color_code):
     """
     Colorizes text using the specified color code.
 

@@ -1,7 +1,7 @@
 import calendar
 import datetime
 from task_manager import get_tasks_for_day, handle_task_management
-from utils import color_text, BLUE, GREEN, RED, WHITE
+from utils import style_text, BLUE, GREEN, RED
 
 
 def display_calendar(year, month):
@@ -26,11 +26,11 @@ def display_calendar(year, month):
                 line += "   "
             elif day == today.day and month == today.month and year == today.year:
                 todays_tasks = [task for task in tasks]
-                line += f" {color_text(f'{day:2d}', BLUE)}"
+                line += f" {style_text(f'{day:2d}', BLUE)}"
             elif tasks:
                 pending_tasks = sum(1 for task in tasks if task["status"] == "pending")
                 color = GREEN if pending_tasks == 0 else RED
-                line += f" {color_text(f'{day:2d}', color)}"
+                line += f" {style_text(f'{day:2d}', color)}"
             else:
                 line += f" {day:2d}"
 
@@ -39,10 +39,10 @@ def display_calendar(year, month):
     legend_lines = [
         "",
         "",
-        f"{color_text('Blue', BLUE)} - Current Day",
-        f"{color_text('White', WHITE)} - Free Day",
-        f"{color_text('Green', GREEN)} - Tasks Completed",
-        f"{color_text('Red', RED)} - Tasks Pending"
+        f"{style_text('Blue', BLUE)} - Current Day",
+        f"White - Free Day",
+        f"{style_text('Green', GREEN)} - Tasks Completed",
+        f"{style_text('Red', RED)} - Tasks Pending"
     ]
 
     print()
@@ -51,19 +51,19 @@ def display_calendar(year, month):
         print(f"{calendar_lines[i]}      {legend_line}")
 
     if todays_tasks:
-        print("\n\n " + color_text("Today's Checklist:", '4') + "\n")
+        print("\n\n " + style_text("Today's Checklist:", '4') + "\n")
         for task in todays_tasks:
             status_color = GREEN if task["status"] == "completed" else RED
-            print(f" {color_text(task['task'], status_color)}")
+            print(f" {style_text(task['task'], status_color)}")
 
-    nav_line = f"\n\n [{color_text('1-' + str(calendar.monthrange(year, month)[1]), WHITE)}] Check Day " \
-               f"[{color_text('N', WHITE)}] Next Month [{color_text('P', WHITE)}] Previous Month "
+    nav_line = f"\n\n [1-{str(calendar.monthrange(year, month)[1])}] Check Day " \
+               f"[N] Next Month [P] Previous Month "
 
     today = datetime.date.today()
     if year != today.year or month != today.month:
-        nav_line += f"[{color_text('C', WHITE)}] Current Month "
+        nav_line += "[C] Current Month "
 
-    nav_line += f"[{color_text('Q', WHITE)}] Quit\n"
+    nav_line += f"[Q] Quit\n"
     print(nav_line)
 
 
